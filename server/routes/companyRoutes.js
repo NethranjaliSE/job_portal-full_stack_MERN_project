@@ -6,7 +6,8 @@ import { protectCompany } from '../middleware/authMiddleware.js';
 
 const router = express.Router()
 
-const upload = multer({ dest: "uploads/" });
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 //Register a Company 
 router.post('/register',upload.single('image'), registerCompany)

@@ -5,7 +5,8 @@ import { applyForJob, getUserData, getUserJobApplications, updateUserResume } fr
 
 const router = express.Router()
 
-const upload = multer({ dest: "uploads/" });
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 // Get user Data
 router.get('/user', getUserData)
