@@ -74,47 +74,47 @@ export const AppContextProvider =(props) =>{
     }
 
     //Function to fetch user data
-    const fetchUserData = async () =>{
-        try {
-            const token = await getToken();
+    const fetchUserData = async () => {
+      try {
+        const token = await getToken()
+        if (!token) return
 
-            const {data} = await axios.get(backendUrl+'/api/users/user' ,
-                {headers:{Authorization:`Bearer ${token}`}})
+        const { data } = await axios.get(backendUrl + "/api/users/user", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
 
-            if(data.success)  {
-                setUserData(data.user)
-
-            }  else{
-                toast.error(data.message)
-            }
-
-            
-        } catch (error) {
-            toast.error(error.message)
-            
+        if (data.success) {
+          setUserData(data.user)
+        } else {
+          setUserData(null);
+          toast.error(data.message)
         }
+      } catch (error) {
+        console.error(error)
+      }
     }
 
     // Function to fetch users applied application data
     const fetchUserApplications = async () => {
-        try {
+      try {
+        const token = await getToken()
+        if (!token) return
 
-            const token =await getToken()
+        const { data } = await axios.get(
+          backendUrl + "/api/users/applications",
+          { headers: { Authorization: `Bearer ${token}` } }
+        )
 
-            const {data} = await axios.get(backendUrl+'/api/users/applications',
-                {headers:{Authorization:`Bearer ${token}`}}
-            )
-            if(data.success){
-
-                setUserApplications(data.applications)
-            } else {
-                toast.error(data.message)
-            }
-
-        } catch (error) {
-            toast.error(error.message)
-            
+        if (data.success) {
+          setUserApplications(data.applications || [])
+        } else {
+          setUserApplications([])
+          toast.error(data.message)
         }
+      } catch (error) {
+        console.error(error)
+        setUserApplications([])
+      }
     }
 
 
@@ -136,13 +136,13 @@ export const AppContextProvider =(props) =>{
 
     },[companyToken])
 
-    useEffect(() =>{
-        if(user){
-            fetchUserData()
-            fetchUserApplications()
-        }
+    useEffect(() => {
+      if (user?.id) {
+        fetchUserData()
+        fetchUserApplications()
+      }
+    }, [user?.id])
 
-    },[user])
 
 
 
