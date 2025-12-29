@@ -23,7 +23,16 @@ await connectCloudinary()
 
 
 //Middlewares
-app.use(cors())
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173", // Allow your local testing
+      "https://job-portal-full-stack-mern-project.vercel.app/", // 👈 ADD YOUR VERCEL LINK HERE
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 app.use(express.json())
 app.use(clerkMiddleware())
 
