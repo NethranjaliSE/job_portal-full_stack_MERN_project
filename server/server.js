@@ -27,7 +27,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173", // Allow your local testing
-      "https://job-portal-full-stack-mern-project.vercel.app/", // 👈 ADD YOUR VERCEL LINK HERE
+      "https://job-portal-full-stack-mern-project.vercel.app", // 👈 ADD YOUR VERCEL LINK HERE
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
