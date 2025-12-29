@@ -17,7 +17,9 @@ const Application = () => {
   const [isEdit,setIsEdit]=useState(false)
   const [resume,setResume]=useState(null)
 
-  const {backendUrl,userData,userApplications,fetchUserData,fetchUserApplications} =useContext(AppContext)
+  const { backendUrl, userData, userApplications = [], fetchUserData, fetchUserApplications } = useContext(AppContext)
+
+ 
 
   const updateResume = async () =>{
 
@@ -65,7 +67,7 @@ const Application = () => {
       <div className="container px-4 min-h-[65vh] 2xl:px-20 mx-auto my-10">
         <h2 className="text-xl font-semibold ">Your Resume</h2>
         <div className="flex gap-2 mb-6 mt-3">
-          {isEdit || userData && userData.resume === ""
+          {isEdit || (userData && userData.resume === "")
           ? (
             <>
               <label className="flex items-end" htmlFor="resumeUpload">
@@ -92,7 +94,7 @@ const Application = () => {
             <div className="flex gap-2">
               <a
                 className="bg-blue-100 text-blue-600 px-4 py-2 rounded-lg"
-                href={userData.resume} target='_blank'
+                href={userData?.resume} target='_blank'
               >
                 Resume
               </a>
@@ -122,15 +124,15 @@ const Application = () => {
           </thead>
           <tbody>
             {userApplications.map((job, index) =>
-              true ? (
+               (
                 <tr key={index}>
                   <td className="py-3 px-4 flex items-center gap-2 border-b ">
                     <img className="w-8 h-8" src={job.companyId.image} alt="" />
-                    {job.companyId.name}
+                    {job.companyId?.name}
                   </td>
                   <td className="py-2 px-4 border-b">{job.jobId.title}</td>
                   <td className="py-2 px-4 border-b max-sm:hidden">
-                    {job.jobId.location}
+                    {job.jobId?.location}
                   </td>
                   <td className="py-2 px-4 border-b  max-sm:hidden">
                     {moment(job.date).format("ll")}
@@ -139,14 +141,14 @@ const Application = () => {
                     <span className={`${job.status=== 'Accepted' ? 'bg-green-100':job.status==='Rejected'? 'bg-red-100':'bg-blue-100'} px-4 py-1.5 rounded`}> {job.status}</span>
                   </td>
                 </tr>
-              ) : null
+              ) 
             )}
           </tbody>
         </table>
       </div>
       <Footer/>
     </>
-  );
+  )
 }
 
 export default Application

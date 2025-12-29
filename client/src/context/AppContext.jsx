@@ -158,6 +158,7 @@ export const AppContextProvider =(props) =>{
         userApplications,setUserApplications,
         fetchUserData,
         fetchUserApplications,
+        user,
         
 
 

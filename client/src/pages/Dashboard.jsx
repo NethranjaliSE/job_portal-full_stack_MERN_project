@@ -1,5 +1,5 @@
 import React from 'react'
-import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { NavLink, Outlet, useNavigate ,useLocation} from 'react-router-dom'
 import { assets } from '../assets/assets'
 import { useContext } from 'react'
 import { AppContext } from '../context/AppContext'
@@ -9,7 +9,7 @@ const Dashboard = () => {
 
     const navigate =useNavigate()
 
-    const {companyData, setCompanyData,setCompanyToken } = useContext(AppContext)
+    const {companyData, setCompanyData,setCompanyToken ,companyToken} = useContext(AppContext)
 
     // Function to logout for company 
     const logout = () => {
@@ -19,13 +19,17 @@ const Dashboard = () => {
       navigate('/')
     }
 
-    useEffect(() =>{
-      if(companyData){
-        navigate('/dashboard/manage-jobs')
-      }
-
-    },[companyData])
-
+   useEffect(() => {
+     // 1. If not logged in, go Home
+     if (!companyToken) {
+       navigate("/");
+     }
+     // 2. If logged in and just at "/dashboard", go to default "manage-jobs"
+     // This prevents the loop when you are trying to go to "add-job"
+     else if (companyData && location.pathname === "/dashboard") {
+       navigate("/dashboard/manage-jobs");
+     }
+   }, [companyToken, companyData, location.pathname, navigate]);
 
   return (
     <div className="min-h-screen">

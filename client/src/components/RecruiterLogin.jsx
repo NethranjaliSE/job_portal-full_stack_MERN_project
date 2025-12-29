@@ -15,7 +15,7 @@ const RecruiterLogin = () => {
     const[password,setPassword]= useState('' )
     const[email,setEmail] =useState('')
 
-    const [image,setImage] =useState(false)
+    const [image,setImage] =useState(null)
 
     const [isTextDataSubmited,setIsTextDataSubmited] =useState(false)
 
@@ -100,7 +100,7 @@ const RecruiterLogin = () => {
         ? 
           <>
           <div className='flex items-center gap-4 my-10'>
-            <label htmlFor="">
+            <label htmlFor="image">
                 < img className='w-16 rounded-full' src={image ?URL.createObjectURL(image): assets.upload_area} alt="" />
                 <input onChange={e=>setImage(e.target.files[0])} type="file" id='image' hidden/>
             </label>

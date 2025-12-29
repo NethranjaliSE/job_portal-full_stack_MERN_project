@@ -8,6 +8,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
 import Loading from "../components/Loading";
+import { useState } from "react";
 
 const Managejobs = () => {
   const navigate = useNavigate();
