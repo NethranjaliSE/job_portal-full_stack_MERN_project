@@ -1,67 +1,59 @@
 import { Webhook } from "svix";
 import User from "../models/User.js";
-import { response } from "express";
 
-//API Controller Function to Manage Clerk User with database
-export const clerkWebhooks=async(req,res)=>{
-    try{
+// API Controller Function to Manage Clerk User with database
+export const clerkWebhooks = async (req, res) => {
+  try {
+    const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET);
 
-        //create  a Svix instance with clerk webhook secret
-        const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET)
+    // 1. VERIFICATION FIX: Use req.body directly (it is now a raw Buffer)
+    await whook.verify(req.body, {
+      "svix-id": req.headers["svix-id"],
+      "svix-timestamp": req.headers["svix-timestamp"],
+      "svix-signature": req.headers["svix-signature"],
+    });
 
-        //Verifying  Headers
-        await whook.verify(JSON.stringify(req.body),{
-            "svix-id":req.headers["svix-id"],
-            "svix-timestamp":req.headers["svix-timestamp"],
-            "svix-signature":req.headers["svix-signature"]
-        })
+    // 2. PARSING FIX: Now manually parse the body to JSON to use the data
+    const { data, type } = JSON.parse(req.body.toString());
 
-        //Getting Data from request body
-        const {data,type} =req.body
+    // Switch Cases for different Events
+    switch (type) {
+      case "user.created": {
+        const userData = {
+          _id: data.id,
+          email: data.email_addresses[0].email_address,
+          name: data.first_name + " " + data.last_name,
+          image: data.image_url,
+          resume: "",
+        };
+        await User.create(userData);
+        res.json({});
+        break;
+      }
 
-        //Switch Cases for differrnt Events
-        switch (type) {
-          case "user.created": {
+      case "user.updated": {
+        const userData = {
+          email: data.email_addresses[0].email_address,
+          name: data.first_name + " " + data.last_name,
+          image: data.image_url,
+        };
+        await User.findByIdAndUpdate(data.id, userData);
+        res.json({});
+        break;
+      }
 
-            const userData={
-                _id:data.id,
-                email:data.email_addresses[0].email_address,
-                name:data.first_name +" "+data.last_name,
-                image:data.image_url,
-                resume:''
-            }
+      case "user.deleted": {
+        await User.findByIdAndDelete(data.id);
+        res.json({});
+        break;
+      }
 
-            await User.create(userData)
-            res.json({})
-            break;
-          }
-
-          case "user.updated": {
-
-            const userData = {
-              
-              email: data.email_addresses[0].email_address,
-              name: data.first_name + " " + data.last_name,
-              image: data.image_url,
-              
-            }
-            await User.findByIdAndUpdate(data.id,userData)
-            res.json({})
-            break;
-
-          }
-
-          case "user.deleted": {
-            await User.findByIdAndDelete(data.id)
-            res.json({})
-            break;
-          }
-        }
-
-    } catch(error){
-        console.log(error.message);
-       return res.json({success:false,message:'Webhooks Error'})
-
+      default:
+        res.json({});
+        break;
     }
-
-}
+  } catch (error) {
+    console.log("Webhook Error:", error.message);
+    res.json({ success: false, message: "Webhooks Error" });
+  }
+};
