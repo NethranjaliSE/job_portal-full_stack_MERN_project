@@ -224,6 +224,7 @@ const ApplyJob = () => {
                 .filter(
                   (job) =>
                     job._id !== jobData._id &&
+                    job.companyId &&
                     job.companyId._id === jobData.companyId._id
                 )
                 .slice(0, 4)
