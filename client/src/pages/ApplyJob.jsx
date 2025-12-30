@@ -150,7 +150,7 @@ const ApplyJob = () => {
             <div className="flex flex-col md:flex-row items-center">
               <img
                 className="h-24 bg-white rounded-lg p-4 mr-4 border"
-                src={jobData.companyId.image}
+                src={jobData.companyId?.image}
                 alt=""
               />
               <div className="text-center md:text-left text-neutral-700">

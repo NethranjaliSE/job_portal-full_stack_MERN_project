@@ -8,6 +8,7 @@ import { useEffect } from 'react'
 const Dashboard = () => {
 
     const navigate =useNavigate()
+    const location = useLocation();
 
     const {companyData, setCompanyData,setCompanyToken ,companyToken} = useContext(AppContext)
 
