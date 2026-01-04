@@ -40,6 +40,7 @@ const Dashboard = () => {
           <img
             onClick={(e) => navigate("/")}
             className="max-sm:w-32 cursor-pointer"
+            width={160}
             src={assets.logo}
             alt=""
           />
